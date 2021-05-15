@@ -7,7 +7,7 @@
 
 <div class="content">
     Player:
-    <input type="text" @bind-value="@NewPlayerName" @onkeydown="OnKeyDown" />
+    <input type="text" @bind="NewPlayerName" @bind:event="oninput" @onkeydown="OnKeyDown" />
     <button class="btn btn-primary" @onclick="OnAddPlayer">Add</button>
     Impostors:
     <input type="number" @bind-value="@NumberOfImpostors" style="width: 4em" />
