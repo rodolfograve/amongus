@@ -1,0 +1,14 @@
+﻿<button class="btn btn-block @PlayerDataModel.ButtonClass" @onclick="OnClick">
+    @PlayerDataModel.PlayerName
+    <div style="visibility: @PlayerDataModel.RoleVisibility">@PlayerDataModel.Role</div>
+</button>
+@if (PlayerDataModel.CheatingDetected)
+{
+    <audio autoplay controls><source src="/cheating-alarm.wav" /></audio>
+}
+
+@code {
+    [Parameter] public PlayerDataModel PlayerDataModel { get; set; }
+
+    public void OnClick() => PlayerDataModel.OnClick();
+}

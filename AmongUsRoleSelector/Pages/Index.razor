@@ -1,0 +1,60 @@
+﻿@page "/"
+@page "/play"
+
+<div>
+    <a href="/instructions" class="btn btn-primary btn-block">See Instructions</a>
+</div>
+
+<div class="content">
+    Player:
+    <input type="text" @bind-value="@NewPlayerName" @onkeydown="OnKeyDown" />
+    <button class="btn btn-primary" @onclick="OnAddPlayer">Add</button>
+    Impostors:
+    <input type="number" @bind-value="@NumberOfImpostors" style="width: 4em" />
+    <button class="btn btn-warning" @onclick="OnReset">Again!</button>
+
+    @foreach (var player in Players)
+    {
+        <PlayerComponent PlayerDataModel="player" />
+    }
+</div>
+
+@code {
+    private Random random = new Random();
+    private int NumberOfImpostors { get; set; } = 1;
+
+    public string NewPlayerName { get; set; } = "P1";
+
+    public List<PlayerDataModel> Players = new List<PlayerDataModel>();
+
+    protected override Task OnInitializedAsync()
+    {
+        Players.Clear();
+        return base.OnInitializedAsync();
+    }
+
+    public void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            OnAddPlayer();
+        }
+    }
+
+    public void OnAddPlayer()
+    {
+        Players.Add(new PlayerDataModel(NewPlayerName));
+        OnReset();
+    }
+
+    public void OnReset()
+    {
+        Players.ForEach(x => x.Reset());
+        while (NumberOfImpostors < Players.Count && Players.Count(x => x.IsImpostor) < NumberOfImpostors)
+        {
+            var impostorIndex = random.Next(0, Players.Count);
+            Players[impostorIndex].SetImpostor();
+        }
+        NewPlayerName = $"P{Players.Count + 1}";
+    }
+}
